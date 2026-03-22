@@ -43,24 +43,22 @@ def translate_text(text):
     except: return text 
 
 # ==========================================
-# 4. 웹 UI 구성
+# 4. 웹 UI 구성 (PaperFinder로 이름 변경!)
 # ==========================================
-st.set_page_config(page_title="Mini SciFinder", page_icon="🔬", layout="centered")
+st.set_page_config(page_title="PaperFinder", page_icon="🔬", layout="centered")
 
-st.title("🔬 나만의 미니 논문 검색 포털")
-st.write("키워드를 검색하고 결과를 **엑셀(CSV) 파일로 다운로드** 하세요.")
+st.title("🔬 PaperFinder")
+st.markdown("전 세계 학술 논문을 검색하고, 번역된 결과를 **엑셀(CSV) 파일로 다운로드** 하세요.")
 
 # 검색 폼 디자인 구성
 with st.form("search_box"):
     query = st.text_input("검색어 (영어 권장)", placeholder="예: Molded Underfill, EMC packaging...")
     
-    # 옵션들을 나란히 배치하기 위해 컬럼 분할
     col1, col2 = st.columns(2)
     with col1:
         limit = st.selectbox("검색 결과 수", [10, 20, 30], index=0)
     with col2:
-        # 번역 켜기/끄기 체크박스 추가 (기본값: 켜짐)
-        st.write("") # 높이 맞춤용 빈 줄
+        st.write("") 
         enable_translation = st.checkbox("🇰🇷 한국어로 자동 번역하기", value=True)
         
     submit = st.form_submit_button("논문 검색 시작")
@@ -68,8 +66,7 @@ with st.form("search_box"):
 # 검색 실행 로직
 if submit:
     if query:
-        # 번역 여부에 따라 로딩 메시지 다르게 표시
-        loading_msg = "🚀 검색 및 한글 번역 중입니다..." if enable_translation else "⚡ 영문 원본을 빠르게 검색 중입니다..."
+        loading_msg = "🚀 PaperFinder가 논문을 검색하고 번역 중입니다..." if enable_translation else "⚡ PaperFinder가 영문 원본을 검색 중입니다..."
         
         with st.spinner(loading_msg):
             papers = search_openalex(query, limit)
@@ -79,7 +76,6 @@ if submit:
                 results_for_excel = []
                 
                 for i, paper in enumerate(papers, 1):
-                    # 기본 정보 추출
                     original_title = paper.get("title", "제목 없음")
                     year = paper.get("publication_year", "연도 미상")
                     
@@ -93,15 +89,13 @@ if submit:
                     abstract_idx = paper.get("abstract_inverted_index", {})
                     original_abstract = build_abstract(abstract_idx)
 
-                    # --- 체크박스 상태에 따른 번역 로직 ---
                     if enable_translation:
                         display_title = translate_text(original_title)
                         ko_abstract = translate_text(original_abstract) if original_abstract else "초록 없음"
                     else:
                         display_title = original_title
-                        ko_abstract = "" # 번역 껐을 땐 사용 안 함
+                        ko_abstract = "" 
 
-                    # 화면에 결과 출력
                     with st.container():
                         st.markdown(f"### {i}. [{display_title}]({url})")
                         
@@ -120,13 +114,11 @@ if submit:
                                     st.markdown("**[English Abstract]**")
                                     st.write(original_abstract)
                                 else:
-                                    # 번역을 껐을 땐 영문 원본만 깔끔하게 표시
                                     st.write(original_abstract)
                             else:
                                 st.write("제공된 초록이 없습니다.")
                         st.divider()
 
-                    # --- 체크박스 상태에 따른 엑셀 데이터 저장 로직 ---
                     row_data = {
                         "제목": display_title,
                         "저자": authors,
@@ -143,14 +135,13 @@ if submit:
 
                     results_for_excel.append(row_data)
 
-                # 엑셀 다운로드 버튼 생성
                 df = pd.DataFrame(results_for_excel)
                 csv = df.to_csv(index=False).encode('utf-8-sig')
                 
                 st.download_button(
                     label="📥 검색 결과 엑셀(CSV)로 다운로드",
                     data=csv,
-                    file_name=f"{query}_논문검색결과.csv",
+                    file_name=f"PaperFinder_{query}_검색결과.csv",
                     mime="text/csv"
                 )
 
