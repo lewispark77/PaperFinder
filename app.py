@@ -71,7 +71,7 @@ with st.form("search_box"):
         limit = st.selectbox("한 번에 불러올 결과 수", [10, 20, 30], index=2)
     with col2:
         st.write("") 
-        enable_translation = st.checkbox("🇰🇷 한국어로 자동 번역하기", value=True)
+        enable_translation = st.checkbox("🇰🇷 한국어로 자동 번역하기", value=False)
         
     submit = st.form_submit_button("신규 논문 검색 시작")
 
