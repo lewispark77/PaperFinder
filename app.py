@@ -60,7 +60,7 @@ if "last_query" not in st.session_state:
 # ==========================================
 st.set_page_config(page_title="PaperFinder", page_icon="🔬", layout="centered")
 
-st.title("🔬 PaperFinder: AI 논문 검색")
+st.title("🔬 PaperFinder: 무료 논문 검색")
 st.markdown("전 세계 학술 논문을 검색하고, 결과를 **엑셀(CSV)로 누적 다운로드** 하세요.")
 
 with st.form("search_box"):
