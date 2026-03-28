@@ -190,7 +190,7 @@ if st.session_state.all_papers:
                         st.divider()
                     st.write(original_abstract)
                 else:
-                    st.write("제공된 초록이 없습니다.")
+                    st.info("🔒 출판사 저작권 정책으로 비공개 처리된 초록입니다. 상단의 [논문 제목]을 클릭하여 원문 사이트에서 확인해 주세요.")
             st.divider()
 
         # 데이터 저장
